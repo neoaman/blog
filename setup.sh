@@ -19,6 +19,8 @@ chown www-data:www-data db.sqlite3
 chown www-data:www-data /var/www/blog
 chown www-data:www-data /var/www/blog/
 chown www-data:www-data /var/www/blog/*
+chown www-data:www-data /var/www/blog/staticfiles/
+chown www-data:www-data /var/www/blog/staticfiles/*
 cp custom.conf /etc/apache2/sites-available/
 cd /etc/apache2/sites-available/
 a2enmod wsgi
