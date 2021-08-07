@@ -18,7 +18,6 @@ urlpatterns = [
 
 
     re_path(r'^static/(?P<path>.*)$', serve, { 'document_root': settings.FRONTEND_ROOT / "static"}),  # For Frontend Static files only
-    re_path(r'^service-worker.js$', serve, { 'document_root': settings.FRONTEND_ROOT,"path":"/service-worker.js" }),  # For Frontend files 
     re_path(r'^(?P<path>.*\.[a-z]{3,4})$', serve, { 'document_root': settings.FRONTEND_ROOT }),  # For Frontend files    
     re_path(r'^(?P<path>.*)$', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
     
