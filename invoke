@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# trap echo "mycleanup" EXIT
+
+server="ubuntu@ec2-54-218-123-163.us-west-2.compute.amazonaws.com"
+key="/media/aman/Study/WEBSITES/Credential/solution.pem"
+
+case $1 in 
+
+    activate|a )
+        # source /home/ubuntu/venv/sol/bin/activate;;
+        workon sol;;
+
+    build|b )
+        echo "Building ..." ;
+        (cd frontend && npm run build);;
+
+    connect|c )
+        echo "Connecting to production Server ... ";
+        ssh -i "$key" "$server";;
+
+    deploy|d )
+        echo Deploying ... ;
+
+        msg="$2"
+        if [ -z "$msg" ]
+        then echo -n 'Write your commit :- ' ; read msg;
+        fi
+        git add . ;
+        git commit -m "$msg" ;
+        git push origin master ;;
+
+    kill|k )
+        echo "Kill backend..";
+        kill $(lsof -t -i:8000) ;
+        kill $(lsof -t -i:3000) ;;
+
+    push|p)
+        echo "Pushing to master ... ";
+        msg="$2"
+        if [ -z "$msg" ]
+        then echo -n 'Write your commit :- ' ; read msg;
+        fi
+        git add . ;
+        git commit -m "$msg" ;
+        git push origin master ;;
+        
+    start|s )
+        echo "Starting Development Server ...";
+        python manage.py runserver & (cd frontend && npm start) ;;
+
+    serve ) 
+        (cd frontend && serve -s build) ;;
+
+    server )
+        echo Starting django Server ...;
+        python manage.py runserver;;
+
+
+
+
+    # pyout )
+    #     echo "Python output ...";
+    #     trail -f /proc/$(lsof -t -i:8000)/fd/1 ;;
+
+    * ) 
+        echo "Cant understand";;
+esac
