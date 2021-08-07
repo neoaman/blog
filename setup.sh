@@ -1,11 +1,11 @@
 #!/bin/bash
-sudo su
-apt update && apt -y upgrade
-apt-get -y install apache2 
-apt-get -y install libapache2-mod-wsgi-py3
-cd /var/www/
-git clone https://github.com/neoaman/blog.git
-cp deploy.sh ~/
+# sudo su
+# apt update && apt -y upgrade
+# apt-get -y install apache2 
+# apt-get -y install libapache2-mod-wsgi-py3
+# cd /var/www/
+# git clone https://github.com/neoaman/blog.git
+# cp deploy.sh ~/
 apt-get -y install python3.8
 ln -sT /usr/bin/python3 /usr/bin/python
 apt -y install python3-pip
