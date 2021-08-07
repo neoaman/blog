@@ -14,11 +14,11 @@ pip3 install virtualenv
 virtualenv /home/ubuntu/venv/sol
 source /home/ubuntu/venv/sol/bin/activate
 pip install -r requirements.txt
+python manage.py migrate
 chown www-data:www-data db.sqlite3
 chown www-data:www-data /var/www/blog
 chown www-data:www-data /var/www/blog/
 chown www-data:www-data /var/www/blog/*
-python manage.py migrate
 cp custom.conf /etc/apache2/sites-available/
 cd /etc/apache2/sites-available/
 a2enmod wsgi
