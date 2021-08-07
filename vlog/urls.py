@@ -14,11 +14,19 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog-api/', include('blog.urls'),name="blog"),
 
+    path('', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+    path('post/<str:pk>', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+    path('newpost', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+    path('editpost/<str:pk>', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+
     re_path(r'^staticfiles/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), # Local Static Files
 
-
     re_path(r'^static/(?P<path>.*)$', serve, { 'document_root': settings.FRONTEND_ROOT / "static"}),  # For Frontend Static files only
-    re_path(r'^(?P<path>.*\.[a-z]{3,4})$', serve, { 'document_root': settings.FRONTEND_ROOT }),  # For Frontend files    
-    re_path(r'^(?P<path>.*)$', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+    re_path(r'^(?P<path>[a-z\-0-9]+\.[(js)(png)(ico)(json)(css)(txt)(html)]+)$', serve, { 'document_root': settings.FRONTEND_ROOT }),  # For Frontend files    
+    
+    # Some re_path to serve frontend
+    # re_path(r'^$', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+    # re_path(r'^(?P<path>.*)$', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+    
     
 ]
