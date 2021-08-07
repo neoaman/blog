@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zt)74e*+4-j7g7!vy10901n=%$1%m4a3&6k#xvtoz@00m&cjg='
+SECRET_KEY = config('SECRET_KEY',"sUpErSeCrEtKeY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','54.218.123.163',"blog.aman.solutions"]
+ALLOWED_HOSTS = [config('HOST',default='127.0.0.1'),config('DOMAIN',default='localhost')]
 
 
 # Application definition
@@ -133,9 +134,10 @@ USE_TZ = True
 
 STATIC_URL = '/staticfiles/'
 
-# STATICFILES_DIRS = [BASE_DIR/'frontend'/'build'/'static',BASE_DIR / 'staticfiles']
-STATICFILES_DIRS = [BASE_DIR/'frontend'/'build'/'static']
-STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_DIRS = [BASE_DIR/'frontend'/'build'/'static',BASE_DIR / 'staticfiles']
+
+# STATIC_ROOT = BASE_DIR / "staticfiles"
 
 FRONTEND_ROOT = BASE_DIR/'frontend'/'build'
 

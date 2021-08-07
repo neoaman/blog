@@ -316,3 +316,46 @@ Edit [package.json](frontend/package.json)
   "homepage": "http://127.0.0.1:8000",
   "proxy": "http://127.0.0.1:8000",
 ```
+
+## Using Python Decouple for env variables   
+
+```python
+from decouple import config
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+SECRET_KEY = config('SECRET_KEY',"sUpErSeCrEtKeY")
+
+DEBUG = config('DEBUG', default=False, cast=bool)
+
+ALLOWED_HOSTS = [config('HOST',default='127.0.0.1'),config('DOMAIN',default='localhost')]
+```
+.env file for local   
+```env
+DEBUG = True
+```
+.env for server   
+```env
+SECRET_KEY = xxxxxxxxxx Secret key xxxxxxxxxxxx
+DEBUG = False
+DOMAIN = xxx.xxx.com
+HOST = xxx.xxx.xxx.163
+```
+
+## For collect static and serving static files in prod
+Create a setting_prod
+```python
+from .settings import *
+
+STATICFILES_DIRS = [BASE_DIR/'frontend'/'build'/'static']
+STATIC_ROOT = BASE_DIR / "staticfiles"
+```
+change the collect static function in package.json
+```json
+"build": "react-scripts build && (cd ../ && echo yes | python manage.py collectstatic --settings=vlog.setting_prod)",
+```
+Change wsgi.py 
+from 
+`os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vlog.settings')`
+to
+`os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vlog.setting_prod')`
