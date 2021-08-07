@@ -56,7 +56,7 @@ export const getList = async (use = "post") => {
 export const getDocument = async (use = "post", pk = "1") => {
   const api = chooseApi(use);
 
-  const response_data = await fetch(`${api}/${pk}`)
+  const response_data = await fetch(`${api}${pk}`)
     .then((response) => response.json())
     .then((data) => data)
     .catch((error) => console.log(error));
@@ -77,7 +77,28 @@ export const postDocument = async (instance, use = "post", pk = "1") => {
     body: JSON.stringify(instance),
   };
 
-  const response_data = await fetch(`${api}/${pk}`, requestOptions)
+  const response_data = await fetch(`${api}${pk}`, requestOptions)
+    .then((response) => response.json())
+    .then((data) => data)
+    .catch((error) => console.log(error));
+  return response_data;
+};
+
+export const insertDocument = async (instance, use = "post") => {
+  const api = chooseApi(use);
+  var csrftoken = getCookie("csrftoken");
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      // Authorization: `Token ${tkn}`,
+      "X-CSRFToken": csrftoken,
+    },
+    body: JSON.stringify(instance),
+  };
+
+  const response_data = await fetch(`${api}`, requestOptions)
     .then((response) => response.json())
     .then((data) => data)
     .catch((error) => console.log(error));
@@ -97,7 +118,7 @@ export const deleteDocument = async (use = "post", pk = "1") => {
     },
   };
 
-  const response_data = await fetch(`${api}/${pk}`, requestOptions)
+  const response_data = await fetch(`${api}${pk}`, requestOptions)
     .then((response) => response.json())
     .then((data) => data)
     .catch((error) => console.log(error));

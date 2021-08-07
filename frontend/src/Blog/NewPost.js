@@ -18,7 +18,12 @@ import {
   Avatar,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { getDocument, getList, postDocument } from "../components/Communicator";
+import {
+  getDocument,
+  getList,
+  insertDocument,
+  postDocument,
+} from "../components/Communicator";
 import { Skeleton } from "@material-ui/lab";
 import { setValue } from "../components/Manipulator";
 import { Checkbox } from "@material-ui/core";
@@ -102,7 +107,7 @@ const NewPost = (props) => {
 
   const handelSubmit = async (e) => {
     setAlert("updating");
-    const response = await postDocument(post, "post", "");
+    const response = await insertDocument(post, "post");
     setPostId(response["id"]);
     setAlert("Done");
     console.log(response);
