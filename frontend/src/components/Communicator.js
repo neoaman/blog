@@ -144,11 +144,12 @@ export const loginUser = async (credential) => {
     },
     body: JSON.stringify(credential),
   };
-
-  const response_data = await fetch(`${api}`, requestOptions)
+  var response_data = null;
+  response_data = await fetch(`${api}`, requestOptions)
     .then((response) => response.json())
     .then((data) => data)
     .catch((error) => console.log(error));
+  console.debug("Data from communicator", response_data);
   return response_data;
 };
 

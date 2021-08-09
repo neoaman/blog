@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 
 import { Link } from "react-router-dom";
+import useUser from "../components/use-user";
 
 const ViewPosts = () => {
   const theme = useTheme();
@@ -22,6 +23,7 @@ const ViewPosts = () => {
   // const md_b = useMediaQuery(theme.breakpoints.up("md"));
 
   const [posts, setPosts] = useState(null);
+  useUser(); // It will fetch the user data and cache it
 
   useEffect(() => {
     const fetchPosts = async () => {

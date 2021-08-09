@@ -24,6 +24,10 @@ urlpatterns = [
     path('post/<str:pk>', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
     path('newpost', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
     path('editpost/<str:pk>', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+    
+    re_path(r'^auth/(?P<path>.*)$', TemplateView.as_view(template_name="index.html"), name='home'),  # For Frontend 
+    
+
 
     re_path(r'^staticfiles/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}), # Local Static Files
 

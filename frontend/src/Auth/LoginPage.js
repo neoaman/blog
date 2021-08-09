@@ -38,6 +38,7 @@ const LoginPage = () => {
     password: "",
   });
   const [user, setUser] = useState(blankUser);
+  const [alert, setAlert] = useState(null);
 
   const handelInputs = (e) => {
     const name = e.target.name;
@@ -50,18 +51,26 @@ const LoginPage = () => {
     }
   };
 
-  const { loading, user_ } = useUser();
+  const { loading, user_, error } = useUser();
   useEffect(() => {
-    if (!loading) {
+    if (!loading && !error) {
       setUser(user_);
+    } else {
+      console.warn(error);
     }
-  }, [user_, loading]);
+  }, [user_, loading, error]);
 
+  useUser();
   const onSubmit = async (params) => {
     setUser(blankUser);
+    setAlert(null);
     const response = await loginUser(credentials);
-    setUser(response);
     console.debug(response);
+    if (response) {
+      setUser(response);
+    } else {
+      setAlert("Invalid credentials");
+    }
   };
 
   const onLogout = async (params) => {
@@ -128,6 +137,9 @@ const LoginPage = () => {
               >
                 Login
               </Button>
+            </Grid>
+            <Grid item xs={10} className={classes.formcomponent}>
+              <Typography variant="caption">{alert ? alert : ""}</Typography>
             </Grid>
           </>
         ) : (

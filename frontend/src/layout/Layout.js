@@ -23,14 +23,14 @@ const Homepage = () => {
 
   const [user, setUser] = useState(blankUser);
 
-  const { loading, user_ } = useUser();
-  console.log("User from Navbar", user_);
+  const { loading, user_, error } = useUser();
+  console.log("User from Layout", user_);
 
   useEffect(() => {
-    if (!loading) {
+    if (!loading && !error) {
       setUser(user_);
     }
-  }, [user_, loading]);
+  }, [user_, loading, error]);
 
   return (
     <Grid container alignItems="stretch" direction="column">
