@@ -5,7 +5,6 @@ import { getList } from "../components/Communicator";
 import {
   Grid,
   Card,
-  CardActionArea,
   CardMedia,
   CardContent,
   Button,
@@ -20,7 +19,7 @@ const ViewPosts = () => {
   const theme = useTheme();
 
   const sm_b = useMediaQuery(theme.breakpoints.up("sm"));
-  const md_b = useMediaQuery(theme.breakpoints.up("md"));
+  // const md_b = useMediaQuery(theme.breakpoints.up("md"));
 
   const [posts, setPosts] = useState(null);
 
@@ -39,7 +38,7 @@ const ViewPosts = () => {
         {posts &&
           posts.map((post, p_id) => (
             <Card key={p_id}>
-              <CardActionArea component={Link} to={`/post/${post.id}`}>
+              <CardContent>
                 <Grid
                   container
                   direction={`${p_id % 2 ? "row-reverse" : "row"}`}
@@ -47,9 +46,9 @@ const ViewPosts = () => {
                   alignItems="center"
                 >
                   <Grid
+                    item
                     xs={6}
                     align="center"
-                    justifyContent="center"
                     style={{ paddingInline: 10 }}
                   >
                     <CardMedia
@@ -59,17 +58,22 @@ const ViewPosts = () => {
                       image={`${post.image}`}
                     ></CardMedia>
                   </Grid>
-                  <Grid xs={5}>
-                    <Typography>{post.title}</Typography>
-                    {sm_b && <Typography>{post.subtitle}</Typography>}
+                  <Grid item xs={5}>
+                    <Link
+                      to={`/post/${post.id}`}
+                      style={{ textDecoration: "none" }}
+                    >
+                      <Typography>{post.title}</Typography>
+                      {sm_b && <Typography>{post.subtitle}</Typography>}
 
-                    <Typography>-: {post.author_info.name}</Typography>
+                      <Typography>-: {post.author_info.name}</Typography>
+                    </Link>
                     <Button component={Link} to={`/editpost/${post.id}`}>
                       Edit
                     </Button>
                   </Grid>
                 </Grid>
-              </CardActionArea>
+              </CardContent>
             </Card>
           ))}
       </Grid>

@@ -16,7 +16,7 @@ import rehypeRaw from "rehype-raw";
 // remark-math
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import * as prism from "react-syntax-highlighter/dist/esm/styles/prism";
-import { proxy } from "../components/Utils";
+// import { proxy } from "../components/Utils";
 
 const useStyle = makeStyles({
   grayBorder: { border: "2px solid gray" },
@@ -35,6 +35,7 @@ const ViewPost = (props) => {
     code({ node, inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || "");
       var visibility = document.visibilityState;
+      console.debug("Visibility state defined inside Markdown", visibility);
       return !inline && match ? (
         <SyntaxHighlighter
           style={prism.vscDarkPlus}
@@ -58,7 +59,7 @@ const ViewPost = (props) => {
       console.log(post_);
     };
     getPost();
-  }, [props.match.params.pk]);
+  }, [props.match.params.pk, postId]);
   return (
     <Grid
       container
@@ -80,10 +81,9 @@ const ViewPost = (props) => {
         <ReactMarkdown
           className={classes.main}
           // rehypePlugins={[remarkMath, gfm]}
-          rehypePlugins={[gfm]}
+          rehypePlugins={[gfm, rehypeRaw]}
           // rehypePlugins={[rehypeKatex]}
           // rehypePlugins={[remarkMath]}
-          rehypePlugins={[rehypeRaw]}
           components={components}
         >
           {post ? post.content : ""}

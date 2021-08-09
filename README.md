@@ -359,3 +359,6 @@ from
 `os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vlog.settings')`
 to
 `os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vlog.setting_prod')`
+
+## Solve problems from PWA
+Maskable icon manifest.json

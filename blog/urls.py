@@ -16,4 +16,5 @@ urlpatterns = [
 
     path('author/', AuthorListView.as_view(), name="author_list"),
     path('author/<str:pk>', AuthorRetriveView.as_view(), name="author_retrive"),
+
 ]

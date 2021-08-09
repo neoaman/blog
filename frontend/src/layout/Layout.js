@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Grid, makeStyles } from "@material-ui/core";
 import Navbar from "./Navbar";
-import Footer from "./Footer";
+// import Footer from "./Footer";
 import PageRoute from "./PageRoute";
 import { BrowserRouter as Router } from "react-router-dom";
+import { blankUser } from "../components/Utils";
+import useUser from "../components/use-user";
 
 const useStyle = makeStyles({
   main: {
@@ -19,15 +21,26 @@ const useStyle = makeStyles({
 const Homepage = () => {
   const classes = useStyle();
 
+  const [user, setUser] = useState(blankUser);
+
+  const { loading, user_ } = useUser();
+  console.log("User from Navbar", user_);
+
+  useEffect(() => {
+    if (!loading) {
+      setUser(user_);
+    }
+  }, [user_, loading]);
+
   return (
     <Grid container alignItems="stretch" direction="column">
       <Router>
         <Grid container direction="row" alignItems="center">
-          <Navbar></Navbar>
+          <Navbar user={user}></Navbar>
         </Grid>
         <main className={classes.main}>
           <Grid container>
-            <PageRoute></PageRoute>
+            <PageRoute user={user}></PageRoute>
           </Grid>
         </main>
         {/* <footer>

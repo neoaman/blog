@@ -6,7 +6,6 @@ import {
   useMediaQuery,
   useTheme,
   Card,
-  CardActionArea,
   Select,
   Button,
   Input,
@@ -14,7 +13,6 @@ import {
   InputLabel,
   MenuItem,
   ListItemText,
-  IconButton,
   Avatar,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
@@ -49,7 +47,7 @@ const EditPost = (props) => {
   const theme = useTheme();
 
   const sm_b = useMediaQuery(theme.breakpoints.up("sm"));
-  const md_b = useMediaQuery(theme.breakpoints.up("md"));
+  // const md_b = useMediaQuery(theme.breakpoints.up("md"));
 
   const [alert, setAlert] = useState(false);
   const [post, setPost] = useState(null);
@@ -57,7 +55,7 @@ const EditPost = (props) => {
 
   var post_id = props.match.params.pk;
 
-  useEffect(async () => {
+  useEffect(() => {
     const getPost = async (props) => {
       const post_ = await getDocument("post", post_id);
       setPost(post_);
@@ -69,7 +67,7 @@ const EditPost = (props) => {
     };
     getPost();
     getTopic();
-  }, [props.match.params.pk]);
+  }, [props.match.params.pk, post_id]);
 
   const handelInput = (e) => {
     setAlert("modified");
@@ -208,6 +206,7 @@ const EditPost = (props) => {
                 MenuProps={post ? post.topics : []}
               >
                 {topics &&
+                  post &&
                   topics.map((topic) => (
                     <MenuItem key={topic.id} value={topic.id}>
                       <Checkbox checked={post.topic.indexOf(topic.id) > -1} />
@@ -238,7 +237,7 @@ const EditPost = (props) => {
                 : { maxWidth: "90vw", overflowX: true }
             }
           >
-            {post ? (
+            {topics && post ? (
               <>
                 <Typography variant="h5">{post ? post.title : ""}</Typography>
                 <Typography variant="subtitle1">
@@ -254,10 +253,10 @@ const EditPost = (props) => {
                 </Card>
                 <ReactMarkdown
                   // rehypePlugins={[remarkMath, gfm]}
-                  rehypePlugins={[gfm]}
+                  rehypePlugins={[gfm, rehypeRaw]}
                   // rehypePlugins={[rehypeKatex]}
                   // rehypePlugins={[remarkMath]}
-                  rehypePlugins={[rehypeRaw]}
+                  // rehypePlugins={[rehypeRaw]}
                   components={components}
                 >
                   {post ? post.content : ""}
@@ -320,7 +319,7 @@ const EditPost = (props) => {
               </>
             )}
 
-            {topics
+            {topics && post
               ? topics
                   .filter((topic) => post.topic.includes(topic.id))
                   .map((topic) => (
@@ -355,7 +354,7 @@ const EditPost = (props) => {
                 ))}
           </Grid>
           <Grid item xs={12} align="center" style={{ marginBlock: 20 }}>
-            {alert == "modified" && (
+            {alert === "modified" && (
               <Button
                 style={{ background: "orange", color: "white" }}
                 onClick={() => handelSubmit()}
@@ -363,12 +362,12 @@ const EditPost = (props) => {
                 Click to Submit
               </Button>
             )}
-            {alert == "updating" && (
+            {alert === "updating" && (
               <Button style={{ background: "green", color: "white" }}>
                 Updating
               </Button>
             )}
-            {alert == false && post && (
+            {!alert && post && (
               <>
                 <Button
                   style={{ background: "green", color: "white" }}

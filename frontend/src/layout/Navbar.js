@@ -7,7 +7,6 @@ import {
   Grid,
   IconButton,
   InputBase,
-  TextField,
   Toolbar,
   Typography,
   useMediaQuery,
@@ -26,9 +25,10 @@ const useStyle = makeStyles({
   appBar: {
     height: "9vh",
   },
+  // const appBarcol = "linear-gradient(to right, #ffffff 0%, #ffffff 100%)";
 });
 
-const Navbar = () => {
+const Navbar = ({ user }) => {
   const classes = useStyle();
 
   const theme = useTheme();
@@ -36,12 +36,10 @@ const Navbar = () => {
   const overMd = useMediaQuery(theme.breakpoints.up("md"));
   const [drawer, drawerToggle] = useReducer((drawer) => !drawer, false);
 
-  // const appBarcol = "linear-gradient(to right, #ffffff 0%, #ffffff 100%)";
-
   return (
     <AppBar position="static" className={classes.appBar}>
       <Drawer anchor={"left"} open={drawer} onClose={drawerToggle}>
-        <Sidebar overSm={overSm} overMd={overMd}></Sidebar>
+        <Sidebar user={user} overSm={overSm} overMd={overMd}></Sidebar>
       </Drawer>
 
       <Toolbar className={classes.topBar}>
@@ -81,17 +79,20 @@ const Navbar = () => {
           </Grid>
         </Grid>
         {overSm && (
-          <Grid item xs={1} align="center">
-            <IconButton
+          <Grid item xs={3} align="center">
+            <Button
               color="secondary"
               style={{
                 marginInline: 20,
-                background:
-                  "linear-gradient(to right, #ff9999 0%, #ffccff 100%)",
+                // background:
+                //   "linear-gradient(to right, #ff9999 0%, #ffccff 100%)",
               }}
+              component={Link}
+              to="/auth/login"
             >
-              <HiUser></HiUser>
-            </IconButton>
+              <HiUser size="20"></HiUser>
+              <Typography variant="h6">{user.username}</Typography>
+            </Button>
           </Grid>
         )}
       </Toolbar>

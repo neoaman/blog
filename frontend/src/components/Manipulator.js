@@ -1,7 +1,7 @@
 export const setValue = (value, key, func, obj, type = "obj") => {
   var conv;
 
-  if (type == "arr") {
+  if (type === "arr") {
     conv = [...obj];
   } else {
     conv = { ...obj };

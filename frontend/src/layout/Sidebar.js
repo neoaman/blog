@@ -5,18 +5,32 @@ import {
   List,
   ListItem,
   Typography,
-  ListItemIcon,
   ListItemText,
   ListItemAvatar,
   Avatar,
+  makeStyles,
 } from "@material-ui/core";
 import React from "react";
 import { HiUser } from "react-icons/all";
 import { AddBox } from "@material-ui/icons";
 import { Link } from "react-router-dom";
 
+const useStyle = makeStyles({
+  branding: {
+    background: "linear-gradient(to right, #33ccff 20%, #ff99cc 100%)",
+    padding: 10,
+  },
+  noDecoration: {
+    textDecoration: "none",
+  },
+  user: {
+    background: "linear-gradient(to right, #ff9999 0%, #ffccff 100%)",
+  },
+});
+
 const Sidebar = (props) => {
-  const { overSm, overMd } = props;
+  const classes = useStyle();
+  const { user, overSm, overMd } = props;
 
   return (
     <List
@@ -26,44 +40,35 @@ const Sidebar = (props) => {
       }}
     >
       {!overSm && (
-        <>
+        <Link to="/" className={classes.noDecoration}>
           <Typography
             variant="h6"
             // color="primary"
             display="block"
             align="center"
-            style={{
-              background:
-                "linear-gradient(to right, #33ccff 20%, #ff99cc 100%)",
-              padding: 10,
-            }}
+            className={classes.branding}
           >
-            Blog
+            BLOG
+            <Typography variant="caption" display="block">
+              by aman.solutions
+            </Typography>
           </Typography>
           <Divider></Divider>
-        </>
+        </Link>
       )}
       <Grid
         container
         justifyContent="flex-start"
         alignItems="center"
         direction="row"
-        style={{
-          background: `${
-            overSm ? "linear-gradient(to right, #ff9999 0%, #ffccff 100%)" : ""
-          }`,
-        }}
+        className={classes.user}
       >
-        <IconButton
-          color="secondary"
-          style={{
-            marginInline: 20,
-            background: "linear-gradient(to right, #ff9999 0%, #ffccff 100%)",
-          }}
-        >
+        <IconButton color="secondary" component={Link} to="/auth/login">
           <HiUser></HiUser>
         </IconButton>
-        <Typography variant="h6">Aman Patel</Typography>
+        <Typography variant="h6">
+          {user ? user.username.toUpperCase() : ""}
+        </Typography>
       </Grid>
       <Divider></Divider>
       <ListItem component={Link} to={"/newpost"}>

@@ -2,9 +2,11 @@
 # Builtin DJANGO
 from decimal import Context
 from typing import OrderedDict
+from django.contrib.auth.models import Group, User
 from django.http.response import Http404
 from django.shortcuts import redirect, render
 from django.forms.models import model_to_dict
+from django.contrib.auth import authenticate, login, logout
 
 # Rest Framework
 from rest_framework import serializers
@@ -12,8 +14,9 @@ from rest_framework.views import APIView,Response,status
 from rest_framework.reverse import reverse
 
 # LOCAL
-from .serializers import TechBlogSerializer,BlogCategorySerializer,AuthorSerializer
+from .serializers import TechBlogSerializer,BlogCategorySerializer,AuthorSerializer, UserSerializer
 from .models import TechBlog,BlogCategory,Author
+from rest_framework.permissions import IsAuthenticated
 
 #_____________________ Required API View _______________________________
 
@@ -53,6 +56,7 @@ class TechBlogListView(APIView):
     name = "Blog List View"
 
     serializer_class = TechBlogSerializer
+    # permission_classes = [IsAuthenticated]
     model = TechBlog
     lookup_field = "id"
     
@@ -186,3 +190,46 @@ class AuthorRetriveView(TechBlogRetriveView):
     serializer_class = AuthorSerializer
     lookup_field = "user"
     model = Author
+
+class UserLogin(APIView):
+
+    name = "user Login"
+    serializer_class = UserSerializer
+    model  = User
+
+    def post(self, request, format=None):
+
+        username = request.data["username"]
+        password = request.data["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request,user)
+            return Response({"msg":"Successfully Login"},status=status.HTTP_200_OK)
+        else:
+            return Response({"msg":"User not found"},status=status.HTTP_204_NO_CONTENT)
+
+            
+class UserInfo(APIView):
+
+    
+    def delete(self,request,format=None):
+        logout(request)
+
+        return Response({"username":"","group":[],"active":False,"isActive":False,"isStaff":False,"isSuperUser":False},status=status.HTTP_200_OK)
+
+
+    def post(self, request, format=None):
+        try:
+            user = request.user
+            username = user.username 
+            groups = list([i.name for i in Group.objects.filter(user=user)])
+            # print(groups)
+            isActive = user.is_active
+            lastLogin = user.last_login
+            isStaff = user.is_staff
+            isSuperUser = user.is_superuser
+            
+        except:
+            return Response({"username":"","group":[],"active":False,"isActive":False,"isStaff":False,"isSuperUser":False},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # print(dir(request.user))
+        return Response({"username":username,"group":groups,"active":isActive,"isActive":isActive,"isStaff":isStaff,"isSuperUser":isSuperUser},status=status.HTTP_200_OK)

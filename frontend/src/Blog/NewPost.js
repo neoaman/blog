@@ -6,7 +6,6 @@ import {
   useMediaQuery,
   useTheme,
   Card,
-  CardActionArea,
   Select,
   Button,
   Input,
@@ -14,16 +13,10 @@ import {
   InputLabel,
   MenuItem,
   ListItemText,
-  IconButton,
   Avatar,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import {
-  getDocument,
-  getList,
-  insertDocument,
-  postDocument,
-} from "../components/Communicator";
+import { getList, insertDocument } from "../components/Communicator";
 import { Skeleton } from "@material-ui/lab";
 import { setValue } from "../components/Manipulator";
 import { Checkbox } from "@material-ui/core";
@@ -42,7 +35,7 @@ import gfm from "remark-gfm";
 // remark-math
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import * as prism from "react-syntax-highlighter/dist/esm/styles/prism";
-import { proxy } from "../components/Utils";
+// import { proxy } from "../components/Utils";
 import { Link } from "react-router-dom";
 
 const blank_post = {
@@ -58,14 +51,14 @@ const NewPost = (props) => {
   const theme = useTheme();
 
   const sm_b = useMediaQuery(theme.breakpoints.up("sm"));
-  const md_b = useMediaQuery(theme.breakpoints.up("md"));
+  // const md_b = useMediaQuery(theme.breakpoints.up("md"));
 
   const [alert, setAlert] = useState(false);
   const [post, setPost] = useState(blank_post);
   const [topics, setTopics] = useState(null);
   const [postId, setPostId] = useState(null);
 
-  useEffect(async () => {
+  useEffect(() => {
     const getTopic = async (props) => {
       const topic_ = await getList("topic");
       setTopics(topic_);
@@ -81,25 +74,26 @@ const NewPost = (props) => {
     setValue(value, name, setPost, post);
   };
 
-  const handleChangeMultiple = (event) => {
-    // console.log(event.target.value);
-    const { options } = event.target;
-    console.log(options);
-    var value = [...post.topic];
-    for (let i = 0, l = options.length; i < l; i += 1) {
-      if (options[i].selected) {
-        var val = Number(options[i].value);
-        if (value.includes(val)) {
-          value = value.filter((v) => v != val);
-        } else {
-          value.push(val);
-        }
-      }
-    }
-    // console.log(value);
+  // const handleChangeMultiple = (event) => {
+  //   // console.log(event.target.value);
+  //   const { options } = event.target;
+  //   console.log(options);
+  //   var value = [...post.topic];
+  //   for (let i = 0, l = options.length; i < l; i += 1) {
+  //     if (options[i].selected) {
+  //       var val = Number(options[i].value);
+  //       if (value.includes(val)) {
+  //         value = value.filter((v) => v != val);
+  //       } else {
+  //         value.push(val);
+  //       }
+  //     }
+  //   }
+  //   // console.log(value);
 
-    setValue(value, "topic", setPost, post);
-  };
+  //   setValue(value, "topic", setPost, post);
+  // };
+
   const handelChange = (event) => {
     console.log(event.target.value);
     setValue(event.target.value, "topic", setPost, post);
@@ -366,7 +360,7 @@ const NewPost = (props) => {
                 ))}
           </Grid>
           <Grid item xs={12} align="center" style={{ marginBlock: 20 }}>
-            {alert == "modified" && (
+            {alert === "modified" && (
               <Button
                 style={{ background: "orange", color: "white" }}
                 onClick={() => handelSubmit()}
@@ -374,12 +368,12 @@ const NewPost = (props) => {
                 Click to Submit
               </Button>
             )}
-            {alert == "updating" && (
+            {alert === "updating" && (
               <Button style={{ background: "green", color: "white" }}>
                 Updating
               </Button>
             )}
-            {alert == "Done" && (
+            {alert === "Done" && (
               <Button
                 style={{ background: "green", color: "white" }}
                 component={Link}
