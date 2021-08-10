@@ -75,7 +75,8 @@ class TechBlogListView(APIView):
             return Response(serializer_.data, status=status.HTTP_200_OK)
         else:
             print(serializer_.errors)
-            return Response(serializer_.errors,status=status.HTTP_406_NOT_ACCEPTABLE)
+            # return Response(serializer_.errors,status=status.HTTP_406_NOT_ACCEPTABLE)
+            return Response([],status=status.HTTP_200_OK)
 
 class TechBlogRetriveView(APIView):
     """
