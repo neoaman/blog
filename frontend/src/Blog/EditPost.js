@@ -203,7 +203,7 @@ const EditPost = (props) => {
                         .join(", ")
                     : ""
                 }
-                MenuProps={post ? post.topics : []}
+                MenuProps={post ? post.topic : []}
               >
                 {topics &&
                   post &&

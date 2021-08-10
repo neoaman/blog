@@ -1,4 +1,5 @@
 import * as jQuery from "jquery";
+import useSWR from "swr";
 
 const posts_api = "/blog-api/post/";
 const topic_api = "/blog-api/topic/";
@@ -41,6 +42,17 @@ function getCookie(name) {
   return cookieValue;
 }
 
+const options = (bodyComponent = {}) => {
+  var csrftoken = getCookie("csrftoken");
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "X-CSRFToken": csrftoken },
+    body: JSON.stringify(bodyComponent),
+  };
+  return requestOptions;
+};
+export const fetcher = (url) => fetch(url, options()).then((r) => r.json());
+
 // // Not required, but still a helpful function
 // function handleErrors(response) {
 //   if (!response.ok) {
@@ -48,6 +60,21 @@ function getCookie(name) {
 //   }
 //   return response;
 // }
+
+const fetcher_ = (...args) => fetch(...args).then((res) => res.json());
+
+export const GetList = (use = "post", body = {}) => {
+  const api = chooseApi(use);
+
+  const { data, error } = useSWR(api, fetcher_);
+  const loading = !data;
+
+  if (!loading && !error) {
+    return data;
+  }
+
+  return "loading";
+};
 
 export const getList = async (use = "post") => {
   const api = chooseApi(use);
@@ -153,6 +180,21 @@ export const loginUser = async (credential) => {
   return response_data;
 };
 
+export const logoutUser = async () => {
+  const api = user_info_api;
+  var csrftoken = getCookie("csrftoken");
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json", "X-CSRFToken": csrftoken },
+    body: JSON.stringify({}),
+  };
+  const data = await fetch(api, requestOptions)
+    .then((respo) => respo.json())
+    .then((data) => data);
+  console.log(data);
+  return data;
+};
+
 export const get_user = async (api = user_info_api) => {
   if (api === null) {
     api = user_info_api;
@@ -170,29 +212,16 @@ export const get_user = async (api = user_info_api) => {
   return data;
 };
 
-export const logoutUser = async () => {
+export const useUser = () => {
   const api = user_info_api;
-  var csrftoken = getCookie("csrftoken");
-  const requestOptions = {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json", "X-CSRFToken": csrftoken },
-    body: JSON.stringify({}),
-  };
-  const data = await fetch(api, requestOptions)
-    .then((respo) => respo.json())
-    .then((data) => data);
-  console.log(data);
-  return data;
-};
+  const { data, error, mutate } = useSWR(api, fetcher);
 
-const options = () => {
-  var csrftoken = getCookie("csrftoken");
+  const loading = !data;
 
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "X-CSRFToken": csrftoken },
-    body: JSON.stringify({}),
+  return {
+    loading,
+    user_: data,
+    error,
+    mutate,
   };
-  return requestOptions;
 };
-export const fetcher = (url) => fetch(url, options()).then((r) => r.json());

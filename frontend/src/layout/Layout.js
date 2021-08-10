@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 import PageRoute from "./PageRoute";
 import { BrowserRouter as Router } from "react-router-dom";
 import { blankUser } from "../components/Utils";
-import useUser from "../components/use-user";
+import { useUser } from "../components/Communicator";
 
 const useStyle = makeStyles({
   main: {
