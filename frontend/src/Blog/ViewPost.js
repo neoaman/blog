@@ -95,14 +95,14 @@ const ViewPost = (props) => {
   const topics_ = GetList("topic");
 
   useEffect(() => {
+    if (Array.isArray(topics_)) {
+      setTopics(topics_);
+    }
     const getPost = async () => {
       const post_ = await getDocument("post", postId);
       setPost(post_);
       console.log(post_);
     };
-    if (Array.isArray(topics_)) {
-      setTopics(topics_);
-    }
     getPost();
   }, [props.match.params.pk, postId, topics_]);
 
@@ -154,7 +154,7 @@ const ViewPost = (props) => {
         alignItems="center"
         className={classes.bagde}
       >
-        {topics && post.topic.length > 0
+        {post && Array.isArray(topics) && post.topic.length > 0
           ? topics
               .filter((t) => post.topic.includes(t.id))
               .map((topic) => (
