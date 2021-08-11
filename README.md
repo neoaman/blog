@@ -1,4 +1,5 @@
-# Blog   
+# Blog 
+## Link https://blog.aman.solutions
 ## Initiating the projects   
 `mkdir vlog` #Create a directory **vlog** for the project   
 `cd vlog`   
