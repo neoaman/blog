@@ -27,7 +27,7 @@ class Author(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True,default=None)
     name = models.CharField(max_length=20)
-    image = models.ImageField(upload_to=settings.BASE_DIR / 'staticfiles'/ 'media')
+    image = models.ImageField(upload_to=settings.BASE_DIR / 'staticfiles'/ 'media',default='user.png')
 
     def __str__(self):
         return self.name

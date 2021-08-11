@@ -57,6 +57,7 @@ const NewPost = (props) => {
   const [post, setPost] = useState(blank_post);
   const [topics, setTopics] = useState(null);
   const [postId, setPostId] = useState(null);
+  const [warning, setWarning] = useState(null);
 
   useEffect(() => {
     const getTopic = async (props) => {
@@ -102,9 +103,14 @@ const NewPost = (props) => {
   const handelSubmit = async (e) => {
     setAlert("updating");
     const response = await insertDocument(post, "post");
-    setPostId(response["id"]);
-    setAlert("Done");
-    console.log(response);
+    if (response.hasOwnProperty("id")) {
+      setPostId(response["id"]);
+      setAlert("Done");
+      console.log(response);
+    } else {
+      setWarning(JSON.stringify(response));
+      setAlert("warn");
+    }
   };
 
   const components = {
@@ -381,6 +387,20 @@ const NewPost = (props) => {
               >
                 View post
               </Button>
+            )}
+            {alert === "warn" && (
+              <>
+                <Button
+                  style={{ background: "green", color: "white" }}
+                  component={Link}
+                  to={`/auth/login`}
+                >
+                  Change User
+                </Button>
+                <Typography color="secondary" variant="h6">
+                  {warning ? warning : ""}
+                </Typography>
+              </>
             )}
           </Grid>
         </Grid>

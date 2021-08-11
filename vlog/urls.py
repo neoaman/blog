@@ -21,11 +21,12 @@ urlpatterns = [
 
 
     path('', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
-    path('post/<str:pk>', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
-    path('newpost', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
-    path('editpost/<str:pk>', TemplateView.as_view(template_name="index.html"), name='home'), # For frontend
+    path('post/<str:pk>', TemplateView.as_view(template_name="index.html"), name='post_view'), # For frontend
+    path('newpost', TemplateView.as_view(template_name="index.html"), name='newpost'), # For frontend
+    path('editpost/<str:pk>', TemplateView.as_view(template_name="index.html"), name='edit_post'), # For frontend
     
-    re_path(r'^auth/(?P<path>.*)$', TemplateView.as_view(template_name="index.html"), name='home'),  # For Frontend 
+    re_path(r'^auth/(?P<path>.*)$', TemplateView.as_view(template_name="index.html"), name='blog_auth'),  # For Frontend 
+    path('auth/login', TemplateView.as_view(template_name="index.html"), name='login'),  # For Frontend Login
     
 
 

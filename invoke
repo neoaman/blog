@@ -20,8 +20,8 @@ case $1 in
         ssh -i "$key" "$server";;
 
     deploy|d )
-        echo Deploying ... ;
-
+        echo Building and Pushing ... ;
+        (cd frontend && npm run build);
         msg="$2"
         if [ -z "$msg" ]
         then echo -n 'Write your commit :- ' ; read msg;

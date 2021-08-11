@@ -1,5 +1,6 @@
 #_____________________Import Required modules / models_______________________________
 # Builtin DJANGO
+from blog.decorator import allowed_author, allowed_users, isAuthor
 from decimal import Context
 from typing import OrderedDict
 from django.contrib.auth.models import Group, User
@@ -16,7 +17,9 @@ from rest_framework.reverse import reverse
 # LOCAL
 from .serializers import TechBlogSerializer,BlogCategorySerializer,AuthorSerializer, UserSerializer
 from .models import TechBlog,BlogCategory,Author
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
+from rest_framework.authtoken.models import Token
 
 #_____________________ Required API View _______________________________
 
@@ -56,7 +59,8 @@ class TechBlogListView(APIView):
     name = "Blog List View"
 
     serializer_class = TechBlogSerializer
-    # permission_classes = [IsAuthenticated]
+    authentication_classes = [TokenAuthentication,SessionAuthentication]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     model = TechBlog
     lookup_field = "id"
     
@@ -66,11 +70,15 @@ class TechBlogListView(APIView):
         serializer_ = self.serializer_class(self.model.objects.all(),many=True,context={"request":request})
         return Response(serializer_.data,status=status.HTTP_200_OK)
 
+    @allowed_users(allowed_roles=["Admin","Author"],redirect_page='login',error_msg="You can't Create new Post")
     def post(self,request,format=None):
        
         serializer_ = self.serializer_class(data = request.data,context={'request':request})
         if serializer_.is_valid():
-            author = Author.objects.get(user=request.user)
+            user = request.user
+            author,alreadyAuthor = Author.objects.get_or_create(user=user,defaults={"name":user.username})
+            if not alreadyAuthor:
+                print("New Author Registered")
             serializer_.save(author = author)
             return Response(serializer_.data, status=status.HTTP_200_OK)
         else:
@@ -91,6 +99,8 @@ class TechBlogRetriveView(APIView):
     serializer_class = TechBlogSerializer
     lookup_field = "id"
     model = TechBlog
+    # authentication_classes = [TokenAuthentication,SessionAuthentication]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_object(self, pk):
         try:
@@ -103,13 +113,15 @@ class TechBlogRetriveView(APIView):
         obj = self.get_object(pk)
         serializer_ = self.serializer_class(instance=obj,context={'request':request})
         return Response(serializer_.data,status=status.HTTP_200_OK)
-
+    
+    @allowed_author
     def post(self,request,pk,format=None):
         """
         1. Post Method accepts 1 argument pk (primary Key)
         2. Using Filter as .update method works on list of objects not single object
         """
         
+        from rest_framework.permissions import IsAuthenticated
         obj = self.get_object(pk)
         serializer_ = self.serializer_class(instance=obj,data = request.data,context={'request':request})
         
@@ -205,9 +217,9 @@ class UserLogin(APIView):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request,user)
-            return Response({"msg":"Successfully Login"},status=status.HTTP_200_OK)
+            return Response({"detail":"Successfully Login"},status=status.HTTP_200_OK)
         else:
-            return Response({"msg":"User not found"},status=status.HTTP_204_NO_CONTENT)
+            return Response({"detail":"User not found"},status=status.HTTP_204_NO_CONTENT)
 
             
 class UserInfo(APIView):
