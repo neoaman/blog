@@ -38,6 +38,8 @@ class TechBlog(models.Model):
     title = models.TextField()
     subtitle = models.TextField(blank=True)
     image = models.TextField(blank=True)
+    css_content = models.TextField(blank=True)
+    extra_content = models.TextField(blank=True)
     content = models.TextField()
     topic = models.ManyToManyField(BlogCategory,blank=True)
     author = models.ForeignKey(Author,on_delete=models.SET_NULL, null=True)

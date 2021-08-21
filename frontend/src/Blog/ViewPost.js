@@ -24,6 +24,7 @@ import rehypeRaw from "rehype-raw";
 // remark-math
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import * as prism from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Helmet } from "react-helmet";
 // import { proxy } from "../components/Utils";
 
 const useStyle = makeStyles({
@@ -114,6 +115,10 @@ const ViewPost = (props) => {
       className={classes.main}
       direction="row"
     >
+      <style>{post ? post.css_content : ""}</style>
+      <Helmet>
+        <script src={post ? post.extra_content : ""}></script>
+      </Helmet>
       <div style={{ position: "relative" }}>
         <CardMedia
           component="img"

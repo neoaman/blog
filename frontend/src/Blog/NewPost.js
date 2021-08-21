@@ -22,12 +22,13 @@ import { setValue } from "../components/Manipulator";
 import { Checkbox } from "@material-ui/core";
 
 import ReactMarkdown from "react-markdown";
+import { Helmet } from "react-helmet";
 import gfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 // import remarkMath from "remark-math";
 // import rehypeKatex from "rehype-katex";
 // import "katex/dist/katex.min.css";
-// import rehypeRaw from "rehype-raw";
 
 // rehype-raw
 // rehype-katex
@@ -229,6 +230,26 @@ const NewPost = (props) => {
             </FormControl>
 
             <TextField
+              value={post ? post.css_content : ""}
+              onChange={handelInput}
+              name={"css_content"}
+              multiline
+              fullWidth
+              variant="filled"
+              label="CSS Contents"
+            ></TextField>
+
+            <TextField
+              value={post ? post.extra_content : ""}
+              onChange={handelInput}
+              name={"extra_content"}
+              multiline
+              fullWidth
+              variant="filled"
+              label="Extra JS url"
+            ></TextField>
+
+            <TextField
               value={post ? post.content : ""}
               onChange={handelInput}
               name={"content"}
@@ -251,27 +272,29 @@ const NewPost = (props) => {
           >
             {post ? (
               <>
-                <Typography variant="h5">{post ? post.title : ""}</Typography>
-                <Typography variant="subtitle1">
-                  {post ? post.subtitle : ""}
-                </Typography>
+                <style>{post.css_content}</style>
+                <Helmet>
+                  <script src={post.extra_content}></script>
+                </Helmet>
+                <Typography variant="h5">{post.title}</Typography>
+                <Typography variant="subtitle1">{post.subtitle}</Typography>
                 <Card>
                   <CardMedia
                     component="img"
                     alt="background"
                     width="100%"
-                    src={post ? post.image : ""}
+                    src={post.image}
                   ></CardMedia>
                 </Card>
                 <ReactMarkdown
                   // rehypePlugins={[remarkMath, gfm]}
-                  rehypePlugins={[gfm]}
+                  rehypePlugins={[gfm, rehypeRaw]}
                   // rehypePlugins={[rehypeKatex]}
                   // rehypePlugins={[remarkMath]}
                   // rehypePlugins={[rehypeKatex, rehypeRaw]}
                   components={components}
                 >
-                  {post ? post.content : ""}
+                  {post.content}
                 </ReactMarkdown>
                 {/* <Grid
                   container
